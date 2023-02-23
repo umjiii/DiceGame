@@ -23,7 +23,7 @@ int* pPlay2 = &p2Points;
 //declare methods used
 void rollDice();
 int calcPoints(int* pdo, int* pdt);
-void playerTurn(int playerNum);
+void playerTurn();
 
 /*------------ main ------------*/
 int main(){
@@ -31,9 +31,7 @@ int main(){
  //initialize random number generator
  srand((unsigned) time(&t)); //seed is computer time to "randomize" as much as possible
 
- printf("Player 1 score: %d\nPlayer 2 score: %d\n+========================================+\n", *pPlay1, *pPlay2);
- playerTurn(1);
- playerTurn(2);
+ playerTurn();
 
  printf("Player 1 score: %d\nPlayer 2 score: %d", *pPlay1, *pPlay2);
 
@@ -45,10 +43,9 @@ int main(){
 /*------------ methods (defined) ------------*/
 
 //player turn
-void playerTurn(int playerNum)
+void playerTurn()
 {
-    if (playerNum == 1)
-    {
+    printf("Player 1 score: %d\nPlayer 2 score: %d\n+========================================+\n", *pPlay1, *pPlay2);
         do {
             rollDice();
             if (*pdo != *pdt && (*pdo == 1 || *pdt ==1)) {
@@ -66,18 +63,15 @@ void playerTurn(int playerNum)
                 scanf(" %c", &again);
             }
 
-            printf("\n");
+            printf("\r\n");
 
         } while (again == 'Y' | again =='y');
-    }
 
-    else
         do {
             rollDice();
             if (*pdo != *pdt && (*pdo == 1 || *pdt ==1)) {
                 *pPlay2 = 0;
                 again = 'n';
-                printf("\n");
             }
             else
                 *pPlay2 += calcPoints(pdo, pdt);
@@ -86,12 +80,17 @@ void playerTurn(int playerNum)
 
             if (*pPlay2 != 0)
             {
-                printf("\n\tDo you want to roll again (Y/N)?");
+                printf("\n\tDo you want to roll again (Y/N)? ");
                 scanf(" %c", &again);
-                printf("\n");
             }
+
+            printf("\r\n");
         } while (again == 'Y' | again =='y');
 
+        if (*pPlay1 < 100 || *pPlay2 < 100)
+        {
+            playerTurn();
+        }
 }
 
 //calcPoints - returns value given dice numbers
@@ -101,7 +100,7 @@ int calcPoints(int* pdo, int* pdt)
         return 25;
 
     else if(*pdo == *pdt)
-        return *pdo * 2;
+        return 2 * (*pdt + *pdo);
 
     else
         return *pdo + *pdt;
